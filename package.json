@@ -1,0 +1,48 @@
+{
+  "name": "@power/pp-vue-socket",
+  "version": "0.0.2",
+  "description": " vue socket",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc -w",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.pingpongx.org:front/power/pp-socket.git"
+  },
+  "author": "xujun",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "http://git.pingpongx.org/front/power/pp-socket/issues"
+  },
+  "homepage": "http://git.pingpongx.org/front/power/pp-socket",
+  "dependencies": {
+    "@types/socket.io-client": "^1.4.32",
+    "@types/sockjs-client": "^1.1.0",
+    "@types/stompjs": "^2.3.4",
+    "eventemitter3": "^3.1.0",
+    "net": "^1.0.2",
+    "socket.io-client": "^2.2.0",
+    "sockjs-client": "^1.3.0",
+    "stompjs": "^2.3.3",
+    "tslib": "^1.9.3",
+    "typescript": "3.1.6",
+    "vue": "^2.5.17",
+    "vue-property-decorator": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.1.3",
+    "jest": "^22.4.2",
+    "ts-jest": "^22.4.0"
+  },
+  "engines": {
+    "node": ">= 4.0.0",
+    "npm": ">= 3.0.0"
+  }
+}
