@@ -19,6 +19,7 @@ interface ISocketVueOptions {
   debug: boolean;
   protocol?: string;
   type?: wsType;
+  options?: any;
 }
 
 export enum wsType {
@@ -43,6 +44,7 @@ export default class VueWebsocket {
     connection,
     vuex,
     debug,
+    options,
     protocol = protocolEnum.SOCKETIO,
     type = wsType.BROADCAST
   }: ISocketVueOptions) {
@@ -53,7 +55,8 @@ export default class VueWebsocket {
     this.emitter = new Emitter(vuex);
     this.ws = new WebsocketProxy(this.logger, this.emitter).generatorWebsocket(
       protocol,
-      connection
+      connection,
+      options
     );
 
     switch (protocol) {
