@@ -4,7 +4,7 @@ import Emitter from "./emitter";
 import Vue, { VueConstructor } from "vue";
 import WebsocketProxy, { protocolEnum } from "./websocketProxy";
 import SocketIOListenler from "./socketioListenler";
-import StompListenler from "./stompListenler";
+import StompListenler, { VueStomp } from "./stompListenler";
 
 declare module "vue/types/vue" {
   interface Vue {
@@ -30,8 +30,9 @@ export enum wsType {
 export default class VueWebsocket {
   public emitter: Emitter;
   public protocol: string;
+  public ws: VueStomp | any;
   private logger: Logger;
-  private ws: any;
+
   private listener: IListenler;
   private type: wsType;
   /**
