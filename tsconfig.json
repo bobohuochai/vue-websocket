@@ -3,7 +3,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "target": "es5",
-    "module": "umd",
+    "module": "esnext",
     "lib": ["es2017", "dom"],
     "declaration": true,
     "declarationMap": true,
@@ -17,6 +17,7 @@
     "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "downlevelIteration": true,
     "types": ["socket.io-client", "stompjs", "sockjs-client"]
   },
