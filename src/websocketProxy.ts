@@ -12,6 +12,11 @@ export enum protocolEnum {
 export default class WebsocketProxy {
   private logger: Logger;
   private eventEmitter: EventEmitter;
+
+  private socket: WebSocket | null = null;
+
+  private stompClient: Stomp.Client | null = null;
+
   constructor(logger: Logger, eventEmitter: EventEmitter) {
     this.logger = logger;
     this.eventEmitter = eventEmitter;
@@ -50,6 +55,37 @@ export default class WebsocketProxy {
   }
 
   /**
+   * reconnect
+   */
+  reconnect(connection: string, options: any) {
+    let headers: any = null;
+    if (options) {
+      headers = options.headers;
+    }
+    let retryCount = 3;
+    const timeGaps = 1000;
+    let connected = false;
+    let reconInv = setInterval(() => {
+      this.socket = new SockJS(connection);
+      this.stompClient = Stomp.over(this.socket);
+      this.stompClient.connect(
+        headers ? headers : {},
+        frame => {
+          clearInterval(reconInv);
+          connected = true;
+          this.logger.info("stomp Reconnected: " + frame);
+          this.eventEmitter.ev_emit(EventTypeEnum.CONNECTED);
+        },
+        () => {
+          if (connected) {
+            this.reconnect(connection, options);
+          }
+        }
+      );
+    }, timeGaps);
+  }
+
+  /**
    * registering stomp instance
    * @param connection
    */
@@ -60,13 +96,13 @@ export default class WebsocketProxy {
       return connection;
     } else if (typeof connection === "string") {
       this.logger.info("Received connection string");
-      const socket = new SockJS(connection);
-      const stompClient = Stomp.over(socket);
+      this.socket = new SockJS(connection);
+      this.stompClient = Stomp.over(this.socket);
       let headers = null;
       if (options) {
         headers = options.headers;
       }
-      stompClient.connect(
+      this.stompClient.connect(
         headers ? headers : {},
         (frame: any) => {
           this.logger.info("stomp Connected: " + frame);
@@ -74,14 +110,15 @@ export default class WebsocketProxy {
         },
         (error: string | Stomp.Frame) => {
           this.logger.error();
+          this.reconnect(connection, options);
         }
       );
       // 重写debug 方法 避免在生产环境中产生log
-      stompClient.debug = (str: string) => {
+      this.stompClient.debug = (str: string) => {
         console.log(str);
       };
       this.logger.info("created stomp client");
-      return stompClient;
+      return this.stompClient;
     } else {
       throw new Error("Unsupported connection type");
     }
