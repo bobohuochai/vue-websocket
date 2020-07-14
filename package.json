@@ -1,6 +1,6 @@
 {
   "name": "@power/pp-vue-socket",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "description": " vue socket",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -8,9 +8,11 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc -b .",
+    "clear": "rm -rf dist",
+    "build": "npm run clear && tsc -b .",
     "watch": "tsc -w",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -23,14 +25,13 @@
   },
   "homepage": "http://git.pingpongx.org/front/power/pp-socket",
   "dependencies": {
+    "@stomp/stompjs": "^5.4.4",
     "@types/socket.io-client": "^1.4.32",
     "@types/sockjs-client": "^1.1.0",
-    "@types/stompjs": "^2.3.4",
     "eventemitter3": "^3.1.0",
     "net": "^1.0.2",
     "socket.io-client": "^2.2.0",
     "sockjs-client": "^1.3.0",
-    "stompjs": "^2.3.3",
     "tslib": "^1.9.3",
     "typescript": "3.1.6",
     "vue": "^2.5.17",

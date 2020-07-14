@@ -1,7 +1,8 @@
 import IListenler from "./IListenler";
 import EventEmitter, { EventTypeEnum } from "./emitter";
-import Stomp, { Subscription } from "stompjs";
-export interface VueStomp extends Stomp.Client {
+import { Client, Message } from "@stomp/stompjs";
+
+export interface VueStomp extends Client {
   $subscribe: (
     topic: string,
     event: (...args: any[]) => void,
@@ -55,9 +56,7 @@ export default class StompListenler implements IListenler {
         const subscription = this.stomp.subscribe(topic, item.event);
         item.subscription = subscription;
         console.log(
-          ` connected #${topic} subscribe, component: ${
-            item.component.$options.name
-          }`
+          ` connected #${topic} subscribe, component: ${item.component.$options.name}`
         );
       });
     });

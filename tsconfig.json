@@ -19,7 +19,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "types": ["socket.io-client", "stompjs", "sockjs-client"]
+    "types": ["socket.io-client", "sockjs-client"]
   },
   "exclude": ["node_modules", "lib", "test"]
 }

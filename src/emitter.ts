@@ -2,7 +2,8 @@ import Logger from "./logger";
 import EventEmitter3 from "eventemitter3";
 export enum EventTypeEnum {
   CONNECTED = "conencted",
-  ERROR = "error"
+  ERROR = "error",
+  RECONNECTED = "reconnected"
 }
 export type EventFn = (...arg: any[]) => any;
 export default class EventEmitter {

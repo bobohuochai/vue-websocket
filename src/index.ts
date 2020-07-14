@@ -1,6 +1,6 @@
 import Logger from "./logger";
 import IListenler from "./IListenler";
-import Emitter from "./emitter";
+import Emitter, { EventTypeEnum } from "./emitter";
 import Vue, { VueConstructor } from "vue";
 import WebsocketProxy, { protocolEnum } from "./websocketProxy";
 import SocketIOListenler from "./socketioListenler";
@@ -26,6 +26,8 @@ export enum wsType {
   BROADCAST = "BROADCAST",
   DIRECTED = "DIRECTED"
 }
+
+export const EventTypeEnums = EventTypeEnum;
 
 export default class VueWebsocket {
   public emitter: Emitter;
