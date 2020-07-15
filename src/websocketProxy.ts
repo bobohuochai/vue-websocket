@@ -136,7 +136,7 @@ export default class WebsocketProxy {
       debug: function(str) {
         console.log(str);
       },
-      reconnectDelay: reconnectDelay ? reconnectDelay : 1000,
+      reconnectDelay: reconnectDelay ? reconnectDelay : 5000,
       ...rest
     });
 
@@ -153,14 +153,16 @@ export default class WebsocketProxy {
     this.stompClient.beforeConnect = () => {
       const self = this;
       // Callback, invoked on before a connection to the STOMP broker.
-      connectTimeoutHandler = setTimeout(
-        function() {
-          console.log("stomp connect timeout:", new Date());
-          (self.stompClient as Client).deactivate();
-          clearTimeout(connectTimeoutHandler);
-        },
-        connectTimeout ? connectTimeout : 30 * 1000
-      );
+      if (!connectTimeoutHandler) {
+        connectTimeoutHandler = setTimeout(
+          function() {
+            console.log("stomp connect timeout:", new Date());
+            (self.stompClient as Client).deactivate();
+            clearTimeout(connectTimeoutHandler);
+          },
+          connectTimeout ? connectTimeout : 5 * 1000 * 60
+        );
+      }
     };
 
     this.stompClient.onConnect = (frame: any) => {
