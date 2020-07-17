@@ -8,7 +8,7 @@ export interface VueStomp extends Client {
     event: (...args: any[]) => void,
     component: any
   ) => any;
-  $unsubscribe: (topic: string, component: any) => void;
+  $unsubscribe: (topic: string, ...args: any) => void;
 }
 
 export default class StompListenler implements IListenler {
@@ -81,26 +81,32 @@ export default class StompListenler implements IListenler {
     }
   }
 
-  private unsubscribe(topic: string, component: any) {
-    this.stomp.unsubscribe(topic);
+  private unsubscribe(topic: string, callback: any, component: any) {
+    //this.stomp.unsubscribe(topic);
     if (this.subscriptions.has(topic)) {
       const selectedSubscriptions = (this.subscriptions.get(
         topic
-      ) as any[]).filter((item: any) => item.component === component);
+      ) as any[]).filter(
+        (item: any) => item.component === component && item.event === callback
+      );
+
       selectedSubscriptions.forEach((item: any) => {
         item.subscription && item.subscription.unsubscribe();
         console.log(
-          `#${topic} unsubscribe, component: ${component.$options.name}`
+          `#${topic} unsubscribe, component: ${component.$options.name},callback: ${callback}`
         );
       });
       const filterSubscriptions = (this.subscriptions.get(
         topic
-      ) as any[]).filter((item: any) => item.component !== component);
+      ) as any[]).filter(
+        (item: any) => item.component !== component || item.event !== callback
+      );
 
       if (filterSubscriptions.length > 0) {
         this.subscriptions.set(topic, filterSubscriptions);
       } else {
         this.subscriptions.delete(topic);
+        this.stomp.unsubscribe(topic);
       }
     }
   }

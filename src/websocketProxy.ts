@@ -128,7 +128,14 @@ export default class WebsocketProxy {
    *  stompjs v5
    */
   private createStompClient(connection: string, options: any = {}) {
-    const { headers, reconnectDelay, connectTimeout, ...rest } = options;
+    const {
+      headers,
+      reconnectDelay,
+      connectTimeout,
+      heartbeatIncoming,
+      heartbeatOutgoing,
+      ...rest
+    } = options;
 
     this.stompClient = new Client({
       brokerURL: connection,
@@ -137,6 +144,8 @@ export default class WebsocketProxy {
         console.log(str);
       },
       reconnectDelay: reconnectDelay ? reconnectDelay : 5000,
+      heartbeatIncoming: heartbeatIncoming ? heartbeatIncoming : 60 * 1000,
+      heartbeatOutgoing: heartbeatOutgoing ? heartbeatOutgoing : 30 * 1000,
       ...rest
     });
 
