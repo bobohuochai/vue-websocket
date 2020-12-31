@@ -54,7 +54,7 @@ export default class WSMixin extends Vue {
 
     if (this.$data.$stomps) {
       Object.keys(this.$data.$stomps).forEach(topic => {
-        this.$websocket.$unsubscribe(topic, this);
+        this.$websocket.$unsubscribe(topic, this.$data.$stomps[topic], this);
       });
     }
   }
