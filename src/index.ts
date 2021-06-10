@@ -59,7 +59,7 @@ export default class VueWebsocket {
     this.ws = new WebsocketProxy(this.logger, this.emitter).generatorWebsocket(
       protocol,
       connection,
-      options
+      { ...options, debug }
     );
 
     switch (protocol) {

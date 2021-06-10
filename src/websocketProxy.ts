@@ -140,9 +140,6 @@ export default class WebsocketProxy {
     this.stompClient = new Client({
       brokerURL: connection,
       connectHeaders: headers ? headers : {},
-      debug: function(str) {
-        console.log(str);
-      },
       reconnectDelay: reconnectDelay ? reconnectDelay : 5000,
       heartbeatIncoming: heartbeatIncoming ? heartbeatIncoming : 60 * 1000,
       heartbeatOutgoing: heartbeatOutgoing ? heartbeatOutgoing : 30 * 1000,
@@ -152,7 +149,7 @@ export default class WebsocketProxy {
     // Fallback code
     // For SockJS you need to set a factory that creates a new SockJS instance
     // to be used for each (re)connect
-    this.stompClient.webSocketFactory = function() {
+    this.stompClient.webSocketFactory = function () {
       // Note that the URL is different from the WebSocket URL
       return new SockJS(connection);
     };
@@ -164,7 +161,7 @@ export default class WebsocketProxy {
       // Callback, invoked on before a connection to the STOMP broker.
       if (!connectTimeoutHandler) {
         connectTimeoutHandler = setTimeout(
-          function() {
+          function () {
             console.log("stomp connect timeout:", new Date());
             (self.stompClient as Client).deactivate();
             clearTimeout(connectTimeoutHandler);
@@ -187,7 +184,7 @@ export default class WebsocketProxy {
       clearTimeout(connectTimeoutHandler);
     };
 
-    this.stompClient.onStompError = function(frame: any) {
+    this.stompClient.onStompError = function (frame: any) {
       // Will be invoked in case of error encountered at Broker
       // Bad login/passcode typically will cause an error
       // Complaint brokers will set `message` header with a brief message. Body may contain details.
@@ -197,7 +194,9 @@ export default class WebsocketProxy {
     };
     // 重写debug 方法 避免在生产环境中产生log
     this.stompClient.debug = (str: string) => {
-      console.log(str);
+      if (rest.debug) {
+        console.log(str);
+      }
     };
 
     this.stompClient.activate();
