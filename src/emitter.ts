@@ -1,9 +1,9 @@
-import Logger from "./logger";
-import EventEmitter3 from "eventemitter3";
+import Logger from './logger'
+import EventEmitter3 from 'eventemitter3'
 export enum EventTypeEnum {
-  CONNECTED = "conencted",
-  ERROR = "error",
-  RECONNECTED = "reconnected"
+  CONNECTED = 'conencted',
+  ERROR = 'error',
+  RECONNECTED = 'reconnected'
 }
 export type EventFn = (...arg: any[]) => any;
 export default class EventEmitter {
@@ -14,19 +14,19 @@ export default class EventEmitter {
   private mutationPrefix?: string;
   private listeners: any;
   constructor(vuex: any) {
-    this.logger = new Logger();
-    this.logger.info(vuex ? `Vuex adapter enabled` : `Vuex adapter disabled`);
+    this.logger = new Logger()
+    this.logger.info(vuex ? 'Vuex adapter enabled' : 'Vuex adapter disabled')
 
     if (vuex) {
-      this.store = vuex.store;
-      this.actionPrefix = vuex.actionPrefix ? vuex.actionPrefix : "WS_ACTION";
+      this.store = vuex.store
+      this.actionPrefix = vuex.actionPrefix ? vuex.actionPrefix : 'WS_ACTION'
       this.mutationPrefix = vuex.mutationPrefix
         ? vuex.mutationPrefix
-        : "WS_MUTATION";
+        : 'WS_MUTATION'
     }
 
-    this.listeners = new Map();
-    this.eventEmitter = new EventEmitter3();
+    this.listeners = new Map()
+    this.eventEmitter = new EventEmitter3()
   }
 
   /**
@@ -36,17 +36,17 @@ export default class EventEmitter {
    * @param component
    */
   public addListener(event: any, callback: () => any, component: any) {
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
       if (!this.listeners.has(event)) {
-        this.listeners.set(event, []);
+        this.listeners.set(event, [])
       }
-      this.listeners.get(event).push({ callback, component });
+      this.listeners.get(event).push({ callback, component })
 
       this.logger.info(
         `#${event} subscribe, component: ${component.$options.name}`
-      );
+      )
     } else {
-      throw new Error(`callback must be a function`);
+      throw new Error('callback must be a function')
     }
   }
 
@@ -59,17 +59,17 @@ export default class EventEmitter {
     if (this.listeners.has(event)) {
       const listeners = this.listeners
         .get(event)
-        .filter((listener: any) => listener.component !== component);
+        .filter((listener: any) => listener.component !== component)
 
       if (listeners.length > 0) {
-        this.listeners.set(event, listeners);
+        this.listeners.set(event, listeners)
       } else {
-        this.listeners.delete(event);
+        this.listeners.delete(event)
       }
 
       this.logger.info(
         `#${event} unsubscribe, component: ${component.$options.name}`
-      );
+      )
     }
   }
 
@@ -80,14 +80,14 @@ export default class EventEmitter {
    */
   public emit(event: any, args: any) {
     if (this.listeners.has(event)) {
-      this.logger.info(`Broadcasting: #${event}, Data:`, args);
+      this.logger.info(`Broadcasting: #${event}, Data:`, args)
 
       this.listeners.get(event).forEach((listener: any) => {
-        listener.callback.call(listener.component, args);
-      });
+        listener.callback.call(listener.component, args)
+      })
     }
 
-    this.dispatchStore(event, args);
+    this.dispatchStore(event, args)
   }
   /**
    *
@@ -96,7 +96,7 @@ export default class EventEmitter {
    *  eventemitter3
    */
   public ev_emit(eventName: string, ...args: any[]) {
-    this.eventEmitter.emit(eventName, eventName, ...args);
+    this.eventEmitter.emit(eventName, eventName, ...args)
   }
 
   /***
@@ -105,7 +105,7 @@ export default class EventEmitter {
   public ev_on(eventName: string, fn: EventFn) {
     this.eventEmitter.on(eventName, (eventName, ...arg: any[]) =>
       fn(eventName, ...arg)
-    );
+    )
   }
 
   /**
@@ -116,22 +116,22 @@ export default class EventEmitter {
   public dispatchStore(event: any, args: any) {
     if (this.store && this.store._actions) {
       for (const prop in this.store._actions) {
-        if (this.store._actions.hasOwnProperty(prop)) {
-          const action = prop.split("/").pop();
+        if (Object.prototype.hasOwnProperty.call(this.store._actions, prop)) {
+          const action = prop.split('/').pop()
           if (action === this.actionPrefix + event) {
-            this.logger.info(`Dispatching Action: ${prop}, Data:`, args);
-            this.store.dispatch(prop, args);
+            this.logger.info(`Dispatching Action: ${prop}, Data:`, args)
+            this.store.dispatch(prop, args)
           }
         }
       }
 
       if (this.mutationPrefix) {
         for (const prop in this.store._mutations) {
-          if (this.store._mutations.hasOwnProperty(prop)) {
-            const mutation = prop.split("/").pop();
+          if (Object.prototype.hasOwnProperty.call(this.store._mutations, prop)) {
+            const mutation = prop.split('/').pop()
             if (mutation === this.mutationPrefix + event) {
-              this.logger.info(`Commiting Mutation:${prop},Data:`, args);
-              this.store.commit(prop, args);
+              this.logger.info(`Commiting Mutation:${prop},Data:`, args)
+              this.store.commit(prop, args)
             }
           }
         }

@@ -1,5 +1,7 @@
 import IListenler from './IListenler'
 import EventEmitter from './emitter'
+
+// eslint-disable-next-line no-undef
 export interface VueSocketIo extends SocketIOClient.Socket {
   onevent: any
 }

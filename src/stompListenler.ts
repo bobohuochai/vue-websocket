@@ -1,6 +1,6 @@
-import IListenler from "./IListenler";
-import EventEmitter, { EventTypeEnum } from "./emitter";
-import { Client, Message } from "@stomp/stompjs";
+import IListenler from './IListenler'
+import EventEmitter, { EventTypeEnum } from './emitter'
+import { Client, Message } from '@stomp/stompjs'
 
 export interface VueStomp extends Client {
   $subscribe: (
@@ -23,26 +23,26 @@ export default class StompListenler implements IListenler {
   private subscriptions: Map<string, any[]>;
 
   constructor(stomp: VueStomp, emitter: EventEmitter) {
-    this.stomp = stomp;
-    this.emitter = emitter;
-    this.subscriptions = new Map();
-    this.register();
+    this.stomp = stomp
+    this.emitter = emitter
+    this.subscriptions = new Map()
+    this.register()
   }
 
   /**
    * Listening all socket.io events
    */
   public register() {
-    this.stomp.$subscribe = this.subscribe.bind(this);
-    this.stomp.$unsubscribe = this.unsubscribe.bind(this);
-    this.emitter.ev_on(EventTypeEnum.CONNECTED, this.onConnected.bind(this));
+    this.stomp.$subscribe = this.subscribe.bind(this)
+    this.stomp.$unsubscribe = this.unsubscribe.bind(this)
+    this.emitter.ev_on(EventTypeEnum.CONNECTED, this.onConnected.bind(this))
   }
 
   /**
    * Broadcast all events to vuejs environment
    */
   public onEvent(event: any, args: any) {
-    this.emitter.emit(event, args);
+    this.emitter.emit(event, args)
   }
   /**
    *
@@ -53,18 +53,18 @@ export default class StompListenler implements IListenler {
   public onConnected(eventName: string, args: any) {
     this.subscriptions.forEach((items: any[], topic: string) => {
       items.forEach((item: any) => {
-        const subscription = this.stomp.subscribe(topic, item.event);
-        item.subscription = subscription;
+        const subscription = this.stomp.subscribe(topic, item.event)
+        item.subscription = subscription
         console.log(
           ` connected #${topic} subscribe, component: ${item.component.$options.name}`
-        );
-      });
-    });
+        )
+      })
+    })
   }
 
   private subscribe(topic: string, event: any, component: any) {
     if (!this.subscriptions.has(topic)) {
-      this.subscriptions.set(topic, []);
+      this.subscriptions.set(topic, [])
     }
     /**
      * 等待ws 连接完成后，开始订阅
@@ -75,9 +75,9 @@ export default class StompListenler implements IListenler {
         event,
         component,
         subscription
-      });
+      })
     } else {
-      (this.subscriptions.get(topic) as any[]).push({ event, component });
+      (this.subscriptions.get(topic) as any[]).push({ event, component })
     }
   }
 
@@ -88,25 +88,25 @@ export default class StompListenler implements IListenler {
         topic
       ) as any[]).filter(
         (item: any) => item.component === component && item.event === callback
-      );
+      )
 
       selectedSubscriptions.forEach((item: any) => {
-        item.subscription && item.subscription.unsubscribe();
+        item.subscription && item.subscription.unsubscribe()
         console.log(
           `#${topic} unsubscribe, component: ${component.$options.name},callback: ${callback}`
-        );
-      });
+        )
+      })
       const filterSubscriptions = (this.subscriptions.get(
         topic
       ) as any[]).filter(
         (item: any) => item.component !== component || item.event !== callback
-      );
+      )
 
       if (filterSubscriptions.length > 0) {
-        this.subscriptions.set(topic, filterSubscriptions);
+        this.subscriptions.set(topic, filterSubscriptions)
       } else {
-        this.subscriptions.delete(topic);
-        this.stomp.unsubscribe(topic);
+        this.subscriptions.delete(topic)
+        this.stomp.unsubscribe(topic)
       }
     }
   }
