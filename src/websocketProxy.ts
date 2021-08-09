@@ -22,15 +22,20 @@ export default class WebsocketProxy {
     this.logger = logger
     this.eventEmitter = eventEmitter
   }
+
+
   public generatorWebsocket(
     protocol: string,
     connection: any,
     options?: any
-  ): any {
+    // eslint-disable-next-line no-undef
+  ): SocketIOClient.Socket | Client {
     switch (protocol) {
       case protocolEnum.SOCKETIO:
         return this.createSocketIO(connection)
       case protocolEnum.STOMP:
+        return this.createStompClient(connection, options)
+      default:
         return this.createStompClient(connection, options)
     }
   }

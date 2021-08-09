@@ -1,11 +1,12 @@
-import { Component, Vue } from 'vue-property-decorator'
+
+/* eslint-disabled */
 import { protocolEnum } from './websocketProxy'
-@Component({})
-export default class WSMixin extends Vue {
+
+const mixin = {
   /**
    *  Assign runtime callbacks
    */
-  public beforeCreate() {
+  beforeCreate() {
     if (
       this.$vueWebsocket &&
       this.$vueWebsocket.protocol === protocolEnum.SOCKETIO
@@ -17,12 +18,12 @@ export default class WSMixin extends Vue {
         this.$vueWebsocket.emitter.removeListener(event, this)
       }
     }
-  }
+  },
 
   /**
    * Register all socket events
    */
-  public mounted() {
+  mounted() {
     if (this.$data.$socket) {
       Object.keys(this.$data.$socket).forEach(event => {
         if (event !== 'subscribe' && event !== 'unsubscribe') {
@@ -40,12 +41,12 @@ export default class WSMixin extends Vue {
         this.$websocket.$subscribe(topic, this.$data.$stomps[topic], this)
       })
     }
-  }
+  },
 
   /**
    * unsubscribe when component unmounting
    */
-  public beforeDestroy() {
+  beforeDestroy() {
     if (this.$data.$socket) {
       Object.keys(this.$data.$socket).forEach(event => {
         this.$vueWebsocket.emitter.removeListener(event, this)
@@ -58,4 +59,6 @@ export default class WSMixin extends Vue {
       })
     }
   }
-}
+} as any
+
+export default mixin

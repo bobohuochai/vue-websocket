@@ -1,17 +1,23 @@
 import Logger from './logger'
 import IListenler from './IListenler'
 import Emitter, { EventTypeEnum } from './emitter'
-import Vue, { VueConstructor } from 'vue'
+import Vue, { App } from 'vue'
 import WebsocketProxy, { protocolEnum } from './websocketProxy'
-import SocketIOListenler from './socketioListenler'
+import SocketIOListenler, { VueSocketIo } from './socketioListenler'
 import StompListenler, { VueStomp } from './stompListenler'
+import { Client } from '@stomp/stompjs'
+import mixin from './mixin'
 
-declare module 'vue/types/vue' {
-  interface Vue {
-    $websocket: any;
+
+
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    // eslint-disable-next-line no-undef
+    $websocket: SocketIOClient.Socket | Client;
     $vueWebsocket: VueWebsocket;
   }
 }
+
 
 interface ISocketVueOptions {
   connection: string | object | any;
@@ -32,7 +38,8 @@ export const EventTypeEnums = EventTypeEnum
 export default class VueWebsocket {
   public emitter: Emitter;
   public protocol: string;
-  public ws: VueStomp | any;
+  // eslint-disable-next-line no-undef
+  public ws: SocketIOClient.Socket | Client;
   private logger: Logger;
 
   private listener: IListenler;
@@ -64,13 +71,13 @@ export default class VueWebsocket {
 
     switch (protocol) {
       case protocolEnum.SOCKETIO:
-        this.listener = new SocketIOListenler(this.ws, this.emitter)
+        this.listener = new SocketIOListenler(this.ws as VueSocketIo, this.emitter)
         break
       case protocolEnum.STOMP:
-        this.listener = new StompListenler(this.ws, this.emitter)
+        this.listener = new StompListenler(this.ws as VueStomp, this.emitter)
         break
       default:
-        this.listener = new StompListenler(this.ws, this.emitter)
+        this.listener = new StompListenler(this.ws as VueStomp, this.emitter)
         break
     }
   }
@@ -79,9 +86,12 @@ export default class VueWebsocket {
    * @param Vue
    *
    */
-  public install(vc: VueConstructor) {
-    vc.prototype.$websocket = this.ws
-    vc.prototype.$vueWebsocket = this
+  public install(app: App) {
+    app.config.globalProperties.$websocket = this.ws
+    app.config.globalProperties.$vueWebsocket = this
     this.logger.info('Vue-Socket.io plugin enabled')
+    app.mixin({
+      ...mixin
+    })
   }
 }
