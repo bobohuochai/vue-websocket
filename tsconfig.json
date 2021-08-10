@@ -4,7 +4,7 @@
     "rootDir": "src",
     "target": "es5",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["esnext", "dom"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,

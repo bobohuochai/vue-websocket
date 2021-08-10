@@ -16,6 +16,7 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-else-return': "error",
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     semi: ['error', 'never'],
@@ -28,7 +29,7 @@ module.exports = {
     'no-plusplus': 0,
     'no-param-reassign': 0,
     'prefer-destructuring': 0,
-    'max-len': ['error', { 'code': 140 }],
+    'max-len': ["error", { "code": 140 }],
     'no-restricted-syntax': 0,
     'default-case': 0,
     'consistent-return': 0,

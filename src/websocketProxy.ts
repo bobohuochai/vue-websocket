@@ -54,9 +54,9 @@ export default class WebsocketProxy {
       this.logger.info('Received connection string')
 
       return SocketIO(connection, { transports: ['websocket'] })
-    } else {
-      throw new Error('Unsupported connection type')
     }
+    throw new Error('Unsupported connection type')
+
   }
 
   /**
