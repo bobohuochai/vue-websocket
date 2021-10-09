@@ -16,11 +16,11 @@ export default class StompListenler implements IListenler {
    * socket.io-client reserved event keywords
    * @type {string[]}
    */
-  private static staticEvents = [];
+   static staticEvents = [];
 
-  private stomp: VueStomp;
-  private emitter: EventEmitter;
-  private subscriptions: Map<string, any[]>;
+   stomp: VueStomp;
+   emitter: EventEmitter;
+   subscriptions: Map<string, any[]>;
 
   constructor(stomp: VueStomp, emitter: EventEmitter) {
     this.stomp = stomp
@@ -62,7 +62,7 @@ export default class StompListenler implements IListenler {
     })
   }
 
-  private subscribe(topic: string, event: any, component: any) {
+   subscribe(topic: string, event: any, component: any) {
     if (!this.subscriptions.has(topic)) {
       this.subscriptions.set(topic, [])
     }
@@ -81,7 +81,7 @@ export default class StompListenler implements IListenler {
     }
   }
 
-  private unsubscribe(topic: string, callback: any, component: any) {
+   unsubscribe(topic: string, callback: any, component: any) {
     //this.stomp.unsubscribe(topic);
     if (this.subscriptions.has(topic)) {
       const selectedSubscriptions = (this.subscriptions.get(

@@ -1,6 +1,6 @@
 {
   "name": "@power/pp-vue-socket",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": " vue socket",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

@@ -36,14 +36,14 @@ export enum wsType {
 export const EventTypeEnums = EventTypeEnum
 
 export default class VueWebsocket {
-  public emitter: Emitter;
-  public protocol: string;
+   emitter: Emitter;
+   protocol: string;
   // eslint-disable-next-line no-undef
-  public ws: SocketIOClient.Socket | Client;
-  private logger: Logger;
+   ws: SocketIOClient.Socket | Client;
+   logger: Logger;
 
-  private listener: IListenler;
-  private type: wsType;
+   listener: IListenler;
+   type: wsType;
   /**
    * lets take all resource
    * @param io
@@ -86,7 +86,7 @@ export default class VueWebsocket {
    * @param Vue
    *
    */
-  public install(app: App) {
+   install(app: App) {
     app.config.globalProperties.$websocket = this.ws
     app.config.globalProperties.$vueWebsocket = this
     this.logger.info('Vue-Socket.io plugin enabled')

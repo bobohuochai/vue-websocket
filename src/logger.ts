@@ -2,15 +2,15 @@
  * shitty logger class
  */
 export default class VueSocketIOLogger {
-  public static debug: boolean
+   static debug: boolean
 
-  private prefix: string
+   prefix: string
   constructor() {
     // VueSocketIOLogger.debug = false
     this.prefix = '%cVue-Socket.io: '
   }
 
-  public info(text: string, data = '') {
+   info(text: string, data = '') {
     if (VueSocketIOLogger.debug) {
       window.console.info(
         this.prefix + `%c${text}`,
@@ -21,19 +21,19 @@ export default class VueSocketIOLogger {
     }
   }
 
-  public error() {
+   error() {
     if (VueSocketIOLogger.debug) {
       window.console.error(this.prefix, ...arguments)
     }
   }
 
-  public warn() {
+   warn() {
     if (VueSocketIOLogger.debug) {
       window.console.warn(this.prefix, ...arguments)
     }
   }
 
-  public event(text: string, data = '') {
+   event(text: string, data = '') {
     if (VueSocketIOLogger.debug) {
       window.console.info(
         this.prefix + `%c${text}`,

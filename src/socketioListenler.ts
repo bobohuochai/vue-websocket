@@ -11,7 +11,7 @@ export default class SocketIOListenler implements IListenler {
    * socket.io-client reserved event keywords
    * @type {string[]}
    */
-  private static staticEvents = [
+   static staticEvents = [
     'connect',
     'error',
     'disconnect',
@@ -27,8 +27,8 @@ export default class SocketIOListenler implements IListenler {
     'pong'
   ]
 
-  private io: VueSocketIo
-  private emitter: EventEmitter
+   io: VueSocketIo
+   emitter: EventEmitter
 
   constructor(io: VueSocketIo, emitter: EventEmitter) {
     this.io = io
@@ -39,7 +39,7 @@ export default class SocketIOListenler implements IListenler {
   /**
    * Listening all socket.io events
    */
-  public register() {
+   register() {
     this.io.onevent = (packet: any) => {
       const [event, ...rest] = packet.data
       let args = rest
@@ -56,7 +56,7 @@ export default class SocketIOListenler implements IListenler {
   /**
    * Broadcast all events to vuejs environment
    */
-  public onEvent(event: any, args: any) {
+   onEvent(event: any, args: any) {
     this.emitter.emit(event, args)
   }
 }

@@ -7,12 +7,12 @@ export enum EventTypeEnum {
 }
 export type EventFn = (...arg: any[]) => any;
 export default class EventEmitter {
-  public eventEmitter: EventEmitter3;
-  private logger: Logger;
-  private store: any;
-  private actionPrefix?: string;
-  private mutationPrefix?: string;
-  private listeners: any;
+  eventEmitter: EventEmitter3;
+   logger: Logger;
+   store: any;
+   actionPrefix?: string;
+   mutationPrefix?: string;
+   listeners: any;
   constructor(vuex: any) {
     this.logger = new Logger()
     this.logger.info(vuex ? 'Vuex adapter enabled' : 'Vuex adapter disabled')
@@ -35,7 +35,7 @@ export default class EventEmitter {
    * @param callback
    * @param component
    */
-  public addListener(event: any, callback: () => any, component: any) {
+   addListener(event: any, callback: () => any, component: any) {
     if (typeof callback === 'function') {
       if (!this.listeners.has(event)) {
         this.listeners.set(event, [])
@@ -55,7 +55,7 @@ export default class EventEmitter {
    * @param event
    * @param component
    */
-  public removeListener(event: any, component: any) {
+   removeListener(event: any, component: any) {
     if (this.listeners.has(event)) {
       const listeners = this.listeners
         .get(event)
@@ -78,7 +78,7 @@ export default class EventEmitter {
    * @param event
    * @param args
    */
-  public emit(event: any, args: any) {
+   emit(event: any, args: any) {
     if (this.listeners.has(event)) {
       this.logger.info(`Broadcasting: #${event}, Data:`, args)
 
@@ -95,14 +95,14 @@ export default class EventEmitter {
    * @param args
    *  eventemitter3
    */
-  public ev_emit(eventName: string, ...args: any[]) {
+   ev_emit(eventName: string, ...args: any[]) {
     this.eventEmitter.emit(eventName, eventName, ...args)
   }
 
   /***
    * eventemitter3
    */
-  public ev_on(eventName: string, fn: EventFn) {
+   ev_on(eventName: string, fn: EventFn) {
     this.eventEmitter.on(eventName, (eventName, ...arg: any[]) =>
       fn(eventName, ...arg)
     )
@@ -113,7 +113,7 @@ export default class EventEmitter {
    * @param event
    * @param args
    */
-  public dispatchStore(event: any, args: any) {
+   dispatchStore(event: any, args: any) {
     if (this.store && this.store._actions) {
       for (const prop in this.store._actions) {
         if (Object.prototype.hasOwnProperty.call(this.store._actions, prop)) {
